@@ -1,10 +1,10 @@
-const express = require('express');
+п»їconst express = require('express');
 const db = require('../config/database');
 const multer = require('multer');
 const path = require('path');
 const router = express.Router();
 
-//функція для отримання варіантів відповідей та підрахунку голосів
+//С„СѓРЅРєС†С–СЏ РґР»СЏ РѕС‚СЂРёРјР°РЅРЅСЏ РІР°СЂС–Р°РЅС‚С–РІ РІС–РґРїРѕРІС–РґРµР№ С‚Р° РїС–РґСЂР°С…СѓРЅРєСѓ РіРѕР»РѕСЃС–РІ
 const getOptionsForQuestions = (questions) => {
     const promises = questions.map(q => {
         return new Promise((resolve, reject) => {
@@ -19,34 +19,34 @@ const getOptionsForQuestions = (questions) => {
             db.query(sql, [q.id_Question], (err, opts) => {
                 if (err) return reject(err);
 
-                //ЛОГІКА ДЛЯ ЗОБРАЖЕНЬ
+                //Р›РћР“Р†РљРђ Р”Р›РЇ Р—РћР‘Р РђР–Р•РќР¬
                 let imageBase64 = null;
 
-                //перевіряємо чи прийшов буфер з бази даних
+                //РїРµСЂРµРІС–СЂСЏС”РјРѕ С‡Рё РїСЂРёР№С€РѕРІ Р±СѓС„РµСЂ Р· Р±Р°Р·Рё РґР°РЅРёС…
                 if (q.image_data) {
-                    imageBase64 = `data:image/jpeg;base64,${q.image_data.toString('base64')}`;//конвертація бінарних даних в рядок Base64
+                    imageBase64 = `data:image/jpeg;base64,${q.image_data.toString('base64')}`;//РєРѕРЅРІРµСЂС‚Р°С†С–СЏ Р±С–РЅР°СЂРЅРёС… РґР°РЅРёС… РІ СЂСЏРґРѕРє Base64
                 }
 
-                //Створення об'єкта результату для одного запиту
+                //РЎС‚РІРѕСЂРµРЅРЅСЏ РѕР±'С”РєС‚Р° СЂРµР·СѓР»СЊС‚Р°С‚Сѓ РґР»СЏ РѕРґРЅРѕРіРѕ Р·Р°РїРёС‚Сѓ
                 resolve({
                     id_Question: q.id_Question,
                     Text: q.Text,
-                    imageBase64: imageBase64,   //Зображення, конвертоване у формат Base64 для прямого вбудовування в тег <img>
-                    user_name: q.user_name || 'Anonymous', //Anonymous замість користувача у випадку його відсутності
-                    options: opts.map(o => ({   //перетворення масиву варіантів відповідей
+                    imageBase64: imageBase64,   //Р—РѕР±СЂР°Р¶РµРЅРЅСЏ, РєРѕРЅРІРµСЂС‚РѕРІР°РЅРµ Сѓ С„РѕСЂРјР°С‚ Base64 РґР»СЏ РїСЂСЏРјРѕРіРѕ РІР±СѓРґРѕРІСѓРІР°РЅРЅСЏ РІ С‚РµРі <img>
+                    user_name: q.user_name || 'Anonymous', //Anonymous Р·Р°РјС–СЃС‚СЊ РєРѕСЂРёСЃС‚СѓРІР°С‡Р° Сѓ РІРёРїР°РґРєСѓ Р№РѕРіРѕ РІС–РґСЃСѓС‚РЅРѕСЃС‚С–
+                    options: opts.map(o => ({   //РїРµСЂРµС‚РІРѕСЂРµРЅРЅСЏ РјР°СЃРёРІСѓ РІР°СЂС–Р°РЅС‚С–РІ РІС–РґРїРѕРІС–РґРµР№
                         id_options: o.id_options,
                         options_text: o.options_text,
-                        votes: o.votes || 0     //0 за замовчуванням якщо голосів немає
+                        votes: o.votes || 0     //0 Р·Р° Р·Р°РјРѕРІС‡СѓРІР°РЅРЅСЏРј СЏРєС‰Рѕ РіРѕР»РѕСЃС–РІ РЅРµРјР°С”
                     }))
                 });
             });
         });
     });
-    // Очікування завершення всіх асинхронних операцій у масиві та повернення об'єднаного результату
+    // РћС‡С–РєСѓРІР°РЅРЅСЏ Р·Р°РІРµСЂС€РµРЅРЅСЏ РІСЃС–С… Р°СЃРёРЅС…СЂРѕРЅРЅРёС… РѕРїРµСЂР°С†С–Р№ Сѓ РјР°СЃРёРІС– С‚Р° РїРѕРІРµСЂРЅРµРЅРЅСЏ РѕР±'С”РґРЅР°РЅРѕРіРѕ СЂРµР·СѓР»СЊС‚Р°С‚Сѓ
     return Promise.all(promises);
 };
 
-//функція обробки помилок БД
+//С„СѓРЅРєС†С–СЏ РѕР±СЂРѕР±РєРё РїРѕРјРёР»РѕРє Р‘Р”
 const dbError = (res, err) => {
     console.error('DB error:', err);
     res.status(500).json({ error: 'DB error' });
@@ -55,7 +55,7 @@ const dbError = (res, err) => {
 
 
 
-//отримування всіх опитуваннь
+//РѕС‚СЂРёРјСѓРІР°РЅРЅСЏ РІСЃС–С… РѕРїРёС‚СѓРІР°РЅРЅСЊ
 router.get('/polls', (req, res) => {
     const sql = `
         SELECT q.*, u.Name AS user_name
@@ -73,7 +73,7 @@ router.get('/polls', (req, res) => {
     });
 });
 
-//пошук опитувань
+//РїРѕС€СѓРє РѕРїРёС‚СѓРІР°РЅСЊ
 router.get('/search', (req, res) => {
     const query = req.query.q;
     if (!query || query.trim() === '') return res.json([]);
@@ -95,7 +95,7 @@ router.get('/search', (req, res) => {
     });
 });
 
-//опитування конкретного юзера
+//РѕРїРёС‚СѓРІР°РЅРЅСЏ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ СЋР·РµСЂР°
 router.get('/polls/user/:id', (req, res) => {
     const userId = req.params.id;
     const sql = `
@@ -115,7 +115,7 @@ router.get('/polls/user/:id', (req, res) => {
     });
 });
 
-//рендер сторінки my-polls.ejs  (Мої опитування)
+//СЂРµРЅРґРµСЂ СЃС‚РѕСЂС–РЅРєРё my-polls.ejs  (РњРѕС— РѕРїРёС‚СѓРІР°РЅРЅСЏ)
 router.get('/my-polls', (req, res) => {
     if (!req.session.user) {
         return res.redirect('/login');
@@ -131,7 +131,7 @@ router.get('/my-polls', (req, res) => {
 
 
 
-//голосування
+//РіРѕР»РѕСЃСѓРІР°РЅРЅСЏ
 router.post('/vote', (req, res) => {
     const { pollId, optionId } = req.body;
 
@@ -141,7 +141,7 @@ router.post('/vote', (req, res) => {
 
     const userId = req.session.user.id;
 
-    //Перевірка чи вже користувач проголосував
+    //РџРµСЂРµРІС–СЂРєР° С‡Рё РІР¶Рµ РєРѕСЂРёСЃС‚СѓРІР°С‡ РїСЂРѕРіРѕР»РѕСЃСѓРІР°РІ
     db.query(
         'SELECT * FROM all_votes WHERE user_id = ? AND id_Question = ?',
         [userId, pollId],
@@ -149,14 +149,14 @@ router.post('/vote', (req, res) => {
             if (err) return dbError(res, err);
             if (result.length > 0) return res.status(403).json({ error: 'already_voted' });
 
-            //Запис голосу
+            //Р—Р°РїРёСЃ РіРѕР»РѕСЃСѓ
             db.query(
                 'INSERT INTO all_votes (user_id, id_Question, id_options) VALUES (?, ?, ?)',
                 [userId, pollId, optionId],
                 (err2) => {
                     if (err2) return dbError(res, err2);
 
-                    //Повернення оновленої кількості голосів
+                    //РџРѕРІРµСЂРЅРµРЅРЅСЏ РѕРЅРѕРІР»РµРЅРѕС— РєС–Р»СЊРєРѕСЃС‚С– РіРѕР»РѕСЃС–РІ
                     db.query(
                         'SELECT COUNT(*) AS votes FROM all_votes WHERE id_options = ?',
                         [optionId],
@@ -177,46 +177,46 @@ router.post('/vote', (req, res) => {
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-//рендер сторінки додавання опитувань add-new.ejs
+//СЂРµРЅРґРµСЂ СЃС‚РѕСЂС–РЅРєРё РґРѕРґР°РІР°РЅРЅСЏ РѕРїРёС‚СѓРІР°РЅСЊ add-new.ejs
 router.get('/polls/add', (req, res) => {
     res.render('Home/add-new', { title: 'Add new poll' });
 });
 
-//Обробка форми створення
+//РћР±СЂРѕР±РєР° С„РѕСЂРјРё СЃС‚РІРѕСЂРµРЅРЅСЏ
 router.post('/polls/add', upload.single('image'), (req, res) => {
     const { question, options } = req.body;
     const imageData = req.file ? req.file.buffer : null;
     const userId = req.session.user ? req.session.user.id : null;
     const validOptions = options.filter(opt => opt && opt.trim() !== '');
 
-    //перевірки
+    //РїРµСЂРµРІС–СЂРєРё
     if (!question || validOptions.length < 2) {
-        return res.status(400).send('Потрібно вказати питання та щонайменше два варіанти.');
+        return res.status(400).send('РџРѕС‚СЂС–Р±РЅРѕ РІРєР°Р·Р°С‚Рё РїРёС‚Р°РЅРЅСЏ С‚Р° С‰РѕРЅР°Р№РјРµРЅС€Рµ РґРІР° РІР°СЂС–Р°РЅС‚Рё.');
     }
     if (!userId) {
-        return res.status(401).send('Ви повинні увійти в систему, щоб додати питання.');
+        return res.status(401).send('Р’Рё РїРѕРІРёРЅРЅС– СѓРІС–Р№С‚Рё РІ СЃРёСЃС‚РµРјСѓ, С‰РѕР± РґРѕРґР°С‚Рё РїРёС‚Р°РЅРЅСЏ.');
     }
 
-    //Додавання питання
+    //Р”РѕРґР°РІР°РЅРЅСЏ РїРёС‚Р°РЅРЅСЏ
     db.query(
         'INSERT INTO question (Text, image_data, user_id) VALUES (?, ?, ?)',
         [question, imageData, userId],
         (err, result) => {
             if (err) {
                 console.error('DB insert error (question):', err);
-                return res.status(500).send('Помилка при додаванні питання.');
+                return res.status(500).send('РџРѕРјРёР»РєР° РїСЂРё РґРѕРґР°РІР°РЅРЅС– РїРёС‚Р°РЅРЅСЏ.');
             }
 
             const questionId = result.insertId;
 
-            //Додавання варіантів
+            //Р”РѕРґР°РІР°РЅРЅСЏ РІР°СЂС–Р°РЅС‚С–РІ
             const optionsData = options.map(opt => [opt, questionId]);
             db.query(
                 'INSERT INTO options (options_text, id_Question) VALUES ?', [optionsData],
                 (err2) => {
                     if (err2) {
                         console.error('DB insert error (options):', err2);
-                        return res.status(500).send('Помилка при додаванні варіантів.');
+                        return res.status(500).send('РџРѕРјРёР»РєР° РїСЂРё РґРѕРґР°РІР°РЅРЅС– РІР°СЂС–Р°РЅС‚С–РІ.');
                     }
                     res.redirect('/Home/add-new?status=success');
                 }

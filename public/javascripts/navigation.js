@@ -1,47 +1,47 @@
-// Очікування, поки браузер повністю завантажить всю структуру HTML
+п»ї// РћС‡С–РєСѓРІР°РЅРЅСЏ, РїРѕРєРё Р±СЂР°СѓР·РµСЂ РїРѕРІРЅС–СЃС‚СЋ Р·Р°РІР°РЅС‚Р°Р¶РёС‚СЊ РІСЃСЋ СЃС‚СЂСѓРєС‚СѓСЂСѓ HTML
 document.addEventListener('DOMContentLoaded', () => {
-    const main = document.querySelector('main'); //знах головного блоку main
+    const main = document.querySelector('main'); //Р·РЅР°С… РіРѕР»РѕРІРЅРѕРіРѕ Р±Р»РѕРєСѓ main
 
-    //Функція динамічного завантаження контенту
+    //Р¤СѓРЅРєС†С–СЏ РґРёРЅР°РјС–С‡РЅРѕРіРѕ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ РєРѕРЅС‚РµРЅС‚Сѓ
     async function loadContent(url, addToHistory = true) {
         try {
-            //хованя старого контенту
+            //С…РѕРІР°РЅСЏ СЃС‚Р°СЂРѕРіРѕ РєРѕРЅС‚РµРЅС‚Сѓ
             main.classList.add('fade');
 
-            //паралельно запускаємо завантаження даних
+            //РїР°СЂР°Р»РµР»СЊРЅРѕ Р·Р°РїСѓСЃРєР°С”РјРѕ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ РґР°РЅРёС…
             const fetchPromise = fetch(url, { headers: { 'X-Requested-With': 'fetch' } });
 
-            //очікування, щоб анімація  встигла спрацювати
+            //РѕС‡С–РєСѓРІР°РЅРЅСЏ, С‰РѕР± Р°РЅС–РјР°С†С–СЏ  РІСЃС‚РёРіР»Р° СЃРїСЂР°С†СЋРІР°С‚Рё
             await new Promise(resolve => setTimeout(resolve, 250));
 
-            const res = await fetchPromise;     //асинхронне очікування завершення HTTP запиту
-            const html = await res.text();      //перетворення відповіді сервера у текст (HTML код сторінки)
-            const parser = new DOMParser();     // Ініціалізація  DOMParser, який вміє читати текст як HTML документ
-            const doc = parser.parseFromString(html, 'text/html');  //перетворення тексту на структуру сторінки, з якою може працювати браузер
-            const newMain = doc.querySelector('main'); //вибирається лише центральна частина
+            const res = await fetchPromise;     //Р°СЃРёРЅС…СЂРѕРЅРЅРµ РѕС‡С–РєСѓРІР°РЅРЅСЏ Р·Р°РІРµСЂС€РµРЅРЅСЏ HTTP Р·Р°РїРёС‚Сѓ
+            const html = await res.text();      //РїРµСЂРµС‚РІРѕСЂРµРЅРЅСЏ РІС–РґРїРѕРІС–РґС– СЃРµСЂРІРµСЂР° Сѓ С‚РµРєСЃС‚ (HTML РєРѕРґ СЃС‚РѕСЂС–РЅРєРё)
+            const parser = new DOMParser();     // Р†РЅС–С†С–Р°Р»С–Р·Р°С†С–СЏ  DOMParser, СЏРєРёР№ РІРјС–С” С‡РёС‚Р°С‚Рё С‚РµРєСЃС‚ СЏРє HTML РґРѕРєСѓРјРµРЅС‚
+            const doc = parser.parseFromString(html, 'text/html');  //РїРµСЂРµС‚РІРѕСЂРµРЅРЅСЏ С‚РµРєСЃС‚Сѓ РЅР° СЃС‚СЂСѓРєС‚СѓСЂСѓ СЃС‚РѕСЂС–РЅРєРё, Р· СЏРєРѕСЋ РјРѕР¶Рµ РїСЂР°С†СЋРІР°С‚Рё Р±СЂР°СѓР·РµСЂ
+            const newMain = doc.querySelector('main'); //РІРёР±РёСЂР°С”С‚СЊСЃСЏ Р»РёС€Рµ С†РµРЅС‚СЂР°Р»СЊРЅР° С‡Р°СЃС‚РёРЅР°
 
             if (newMain) {
-                window.pageContext = null; //очищення контексту
-                main.innerHTML = newMain.innerHTML; //заміна контенту, поки main прозорий
-                document.title = doc.title; //оновлення заголовку сторінки
+                window.pageContext = null; //РѕС‡РёС‰РµРЅРЅСЏ РєРѕРЅС‚РµРєСЃС‚Сѓ
+                main.innerHTML = newMain.innerHTML; //Р·Р°РјС–РЅР° РєРѕРЅС‚РµРЅС‚Сѓ, РїРѕРєРё main РїСЂРѕР·РѕСЂРёР№
+                document.title = doc.title; //РѕРЅРѕРІР»РµРЅРЅСЏ Р·Р°РіРѕР»РѕРІРєСѓ СЃС‚РѕСЂС–РЅРєРё
 
-                executeInlineScripts(main); //якщо на новій сторінці є свій pageContext, він встановиться тут
+                executeInlineScripts(main); //СЏРєС‰Рѕ РЅР° РЅРѕРІС–Р№ СЃС‚РѕСЂС–РЅС†С– С” СЃРІС–Р№ pageContext, РІС–РЅ РІСЃС‚Р°РЅРѕРІРёС‚СЊСЃСЏ С‚СѓС‚
                 reInitPageScripts();
             }
 
             if (addToHistory) history.pushState({ url }, '', url);
 
-            main.classList.remove('fade'); //відображення вже нового контенту
+            main.classList.remove('fade'); //РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ РІР¶Рµ РЅРѕРІРѕРіРѕ РєРѕРЅС‚РµРЅС‚Сѓ
 
-        //Якщо сталася помилка, повертаємо видимість
+        //РЇРєС‰Рѕ СЃС‚Р°Р»Р°СЃСЏ РїРѕРјРёР»РєР°, РїРѕРІРµСЂС‚Р°С”РјРѕ РІРёРґРёРјС–СЃС‚СЊ
         } catch (err) { 
-            console.error('Помилка при завантаженні сторінки:', err);
+            console.error('РџРѕРјРёР»РєР° РїСЂРё Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅС– СЃС‚РѕСЂС–РЅРєРё:', err);
             main.classList.remove('fade');
         }
     }
 
 
-    //Виконання вбудованих скриптів
+    //Р’РёРєРѕРЅР°РЅРЅСЏ РІР±СѓРґРѕРІР°РЅРёС… СЃРєСЂРёРїС‚С–РІ
     function executeInlineScripts(container) {
         container.querySelectorAll('script').forEach(oldScript => {
             const newScript = document.createElement('script');
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    //Перевизначення поведінки для <a> і кнопок, які мають у собі data-nav
+    //РџРµСЂРµРІРёР·РЅР°С‡РµРЅРЅСЏ РїРѕРІРµРґС–РЅРєРё РґР»СЏ <a> С– РєРЅРѕРїРѕРє, СЏРєС– РјР°СЋС‚СЊ Сѓ СЃРѕР±С– data-nav
     document.addEventListener('click', e => {
         const navEl = e.target.closest('a[data-nav], button[data-nav]');
         if (navEl && !navEl.hasAttribute('data-no-ajax')) {
@@ -63,12 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    //Підтримка кнопок назад та вперед
+    //РџС–РґС‚СЂРёРјРєР° РєРЅРѕРїРѕРє РЅР°Р·Р°Рґ С‚Р° РІРїРµСЂРµРґ
     window.addEventListener('popstate', e => {
         if (e.state?.url) loadContent(e.state.url, false);
     });
 
-    //Реініціалізація логіки після динамічного оновлення
+    //Р РµС–РЅС–С†С–Р°Р»С–Р·Р°С†С–СЏ Р»РѕРіС–РєРё РїС–СЃР»СЏ РґРёРЅР°РјС–С‡РЅРѕРіРѕ РѕРЅРѕРІР»РµРЅРЅСЏ
     function reInitPageScripts() {
         if (typeof initAuthButtons === 'function') initAuthButtons();
         if (typeof initVoteSystem === 'function') initVoteSystem();
@@ -76,6 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof initLoginLogic === 'function') initLoginLogic();
     }
 
-    //Початкове ініціалізування після завантаження вебдодатку
+    //РџРѕС‡Р°С‚РєРѕРІРµ С–РЅС–С†С–Р°Р»С–Р·СѓРІР°РЅРЅСЏ РїС–СЃР»СЏ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ РІРµР±РґРѕРґР°С‚РєСѓ
     reInitPageScripts();
 });

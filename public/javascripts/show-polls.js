@@ -1,55 +1,55 @@
-//Ініціалізація системи відображення опитувань та голосування
+п»ї//Р†РЅС–С†С–Р°Р»С–Р·Р°С†С–СЏ СЃРёСЃС‚РµРјРё РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ РѕРїРёС‚СѓРІР°РЅСЊ С‚Р° РіРѕР»РѕСЃСѓРІР°РЅРЅСЏ
 function initVoteSystem() {
     const container = document.getElementById('pollsContainer');
     const searchInput = document.getElementById('mySearch');
     const searchBtn = document.getElementById('searchBtn');
 
-    //змінна стану для "пам'ятання" поточного контексту запиту
+    //Р·РјС–РЅРЅР° СЃС‚Р°РЅСѓ РґР»СЏ "РїР°Рј'СЏС‚Р°РЅРЅСЏ" РїРѕС‚РѕС‡РЅРѕРіРѕ РєРѕРЅС‚РµРєСЃС‚Сѓ Р·Р°РїРёС‚Сѓ
     let currentFetchUrl = '/polls';
 
     if (!container) return;
 
-    //Універсальна функція завантаження
+    //РЈРЅС–РІРµСЂСЃР°Р»СЊРЅР° С„СѓРЅРєС†С–СЏ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ
     async function loadPolls(url) {
         try {
-            // Якщо передана нова URL (наприклад, пошук), вона зберігається.
-            // Якщо не передана (оновлення після голосу), використовується збережена.
+            // РЇРєС‰Рѕ РїРµСЂРµРґР°РЅР° РЅРѕРІР° URL (РЅР°РїСЂРёРєР»Р°Рґ, РїРѕС€СѓРє), РІРѕРЅР° Р·Р±РµСЂС–РіР°С”С‚СЊСЃСЏ.
+            // РЇРєС‰Рѕ РЅРµ РїРµСЂРµРґР°РЅР° (РѕРЅРѕРІР»РµРЅРЅСЏ РїС–СЃР»СЏ РіРѕР»РѕСЃСѓ), РІРёРєРѕСЂРёСЃС‚РѕРІСѓС”С‚СЊСЃСЏ Р·Р±РµСЂРµР¶РµРЅР°.
             if (url) {
                 currentFetchUrl = url;
             }
 
-            const response = await fetch(currentFetchUrl); //мережевий запит до сервера
+            const response = await fetch(currentFetchUrl); //РјРµСЂРµР¶РµРІРёР№ Р·Р°РїРёС‚ РґРѕ СЃРµСЂРІРµСЂР°
 
             if (!response.ok) throw new Error(`Server error: ${response.status}`);
             const polls = await response.json();
-            renderPolls(polls); //виклик функції відтворення отриманих даних
+            renderPolls(polls); //РІРёРєР»РёРє С„СѓРЅРєС†С–С— РІС–РґС‚РІРѕСЂРµРЅРЅСЏ РѕС‚СЂРёРјР°РЅРёС… РґР°РЅРёС…
         } catch (err) {
             console.error('Error loading polls:', err);
         }
     }
 
-    //Динамічний рендеринг інтерфейсу опитувань
+    //Р”РёРЅР°РјС–С‡РЅРёР№ СЂРµРЅРґРµСЂРёРЅРі С–РЅС‚РµСЂС„РµР№СЃСѓ РѕРїРёС‚СѓРІР°РЅСЊ
     function renderPolls(polls) {
-        container.innerHTML = '';    //очищення контейнера
+        container.innerHTML = '';    //РѕС‡РёС‰РµРЅРЅСЏ РєРѕРЅС‚РµР№РЅРµСЂР°
         if (!Array.isArray(polls) || polls.length === 0) {
             container.innerHTML = '<p>No polls found.</p>';
             return;
         }
 
         polls.forEach(poll => {
-            //створення базової структури форми опитування
+            //СЃС‚РІРѕСЂРµРЅРЅСЏ Р±Р°Р·РѕРІРѕС— СЃС‚СЂСѓРєС‚СѓСЂРё С„РѕСЂРјРё РѕРїРёС‚СѓРІР°РЅРЅСЏ
             const pollContainer = document.createElement('div');
             pollContainer.classList.add('poll-container');
 
             const pollTitle = document.createElement('h3');
-            pollTitle.textContent = poll.Text || 'Без назви питання';
+            pollTitle.textContent = poll.Text || 'Р‘РµР· РЅР°Р·РІРё РїРёС‚Р°РЅРЅСЏ';
             pollContainer.appendChild(pollTitle);
 
             const userName = document.createElement('h4');
             userName.textContent = `by ${poll.user_name || 'Anonymous'}`;
             pollContainer.appendChild(userName);
 
-            //обробка та відображення зображення у форматі Base64
+            //РѕР±СЂРѕР±РєР° С‚Р° РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ Р·РѕР±СЂР°Р¶РµРЅРЅСЏ Сѓ С„РѕСЂРјР°С‚С– Base64
             if (poll.imageBase64) {
                 const img = document.createElement('img');
                 img.src = poll.imageBase64;
@@ -61,15 +61,15 @@ function initVoteSystem() {
 
             const form = document.createElement('form');
 
-            //виключення можливості порожніх варіантів відповідей
+            //РІРёРєР»СЋС‡РµРЅРЅСЏ РјРѕР¶Р»РёРІРѕСЃС‚С– РїРѕСЂРѕР¶РЅС–С… РІР°СЂС–Р°РЅС‚С–РІ РІС–РґРїРѕРІС–РґРµР№
             const validOptions = poll.options.filter(opt =>
                 opt && opt.options_text && opt.options_text.trim() !== ''
             );
 
-            //розрахунок загальної кількості голосів тільки для валідних опцій
+            //СЂРѕР·СЂР°С…СѓРЅРѕРє Р·Р°РіР°Р»СЊРЅРѕС— РєС–Р»СЊРєРѕСЃС‚С– РіРѕР»РѕСЃС–РІ С‚С–Р»СЊРєРё РґР»СЏ РІР°Р»С–РґРЅРёС… РѕРїС†С–Р№
             const totalVotes = validOptions.reduce((sum, opt) => sum + Number(opt.votes ?? 0), 0);
 
-            //генерація варіантів відповідей
+            //РіРµРЅРµСЂР°С†С–СЏ РІР°СЂС–Р°РЅС‚С–РІ РІС–РґРїРѕРІС–РґРµР№
             validOptions.forEach(option => {
                 const optionDiv = document.createElement('div');
                 optionDiv.classList.add('option-block');
@@ -87,7 +87,7 @@ function initVoteSystem() {
                 textSpan.classList.add('option-text');
                 textSpan.textContent = option.options_text;
 
-                //Обчислення відсотка голосів для кожного варіанту
+                //РћР±С‡РёСЃР»РµРЅРЅСЏ РІС–РґСЃРѕС‚РєР° РіРѕР»РѕСЃС–РІ РґР»СЏ РєРѕР¶РЅРѕРіРѕ РІР°СЂС–Р°РЅС‚Сѓ
                 const percent = totalVotes > 0 ? ((Number(option.votes) / totalVotes) * 100).toFixed(1) : 0;
                 const percentSpan = document.createElement('span');
                 percentSpan.classList.add('option-percent');
@@ -96,7 +96,7 @@ function initVoteSystem() {
                 label.append(input, textSpan, percentSpan);
                 optionDiv.appendChild(label);
 
-                //створення progress bar (лінія прогресу)
+                //СЃС‚РІРѕСЂРµРЅРЅСЏ progress bar (Р»С–РЅС–СЏ РїСЂРѕРіСЂРµСЃСѓ)
                 const fill = document.createElement('div');
                 fill.classList.add('option-fill');
                 fill.style.width = `${percent}%`;
@@ -113,7 +113,7 @@ function initVoteSystem() {
             voteButton.type = 'button';
             form.appendChild(voteButton);
 
-            //стилізація обраного варіанту при зміні вибору
+            //СЃС‚РёР»С–Р·Р°С†С–СЏ РѕР±СЂР°РЅРѕРіРѕ РІР°СЂС–Р°РЅС‚Сѓ РїСЂРё Р·РјС–РЅС– РІРёР±РѕСЂСѓ
             form.addEventListener('change', e => {
                 if (e.target.matches('input[type="radio"]')) {
                     form.querySelectorAll('.option-block').forEach(div => div.classList.remove('selected'));
@@ -122,9 +122,9 @@ function initVoteSystem() {
             });
 
 
-            //ЛОГІКА ГОЛОСУВАННЯ
+            //Р›РћР“Р†РљРђ Р“РћР›РћРЎРЈР’РђРќРќРЇ
             voteButton.addEventListener('click', async () => {
-                //відправка POST на сервер та оновлення інтерфейсу без перезавантаження
+                //РІС–РґРїСЂР°РІРєР° POST РЅР° СЃРµСЂРІРµСЂ С‚Р° РѕРЅРѕРІР»РµРЅРЅСЏ С–РЅС‚РµСЂС„РµР№СЃСѓ Р±РµР· РїРµСЂРµР·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ
                 const selectedOption = form.querySelector('input[type="radio"]:checked');
                 if (!selectedOption) return Swal.fire({ title: 'Please select an option!', width: 402 });
 
@@ -143,7 +143,7 @@ function initVoteSystem() {
                     const data = await response.json();
                     if (!response.ok) throw data;
 
-                    //візуалізація успіху 
+                    //РІС–Р·СѓР°Р»С–Р·Р°С†С–СЏ СѓСЃРїС–С…Сѓ 
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
@@ -153,11 +153,11 @@ function initVoteSystem() {
                         timer: 1300
                     });
 
-                    //оновлення списку опитувань для відображення нових результатів
+                    //РѕРЅРѕРІР»РµРЅРЅСЏ СЃРїРёСЃРєСѓ РѕРїРёС‚СѓРІР°РЅСЊ РґР»СЏ РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ РЅРѕРІРёС… СЂРµР·СѓР»СЊС‚Р°С‚С–РІ
                     await loadPolls();
 
                 } catch (err) {
-                    //обробка помилок
+                    //РѕР±СЂРѕР±РєР° РїРѕРјРёР»РѕРє
                     if (err?.error === 'not_logged_in') Swal.fire({ icon: "info", title: "You must log in to vote!" });
                     else if (err?.error === 'already_voted') Swal.fire({ position: "top-end", icon: "info", title: "You have already voted!", showConfirmButton: false, timer: 1500 });
                     else Swal.fire({ icon: "error", title: "Oops...", text: "Something went wrong!" });
@@ -170,13 +170,13 @@ function initVoteSystem() {
     }
 
 
-    //ПОШУК
+    //РџРћРЁРЈРљ
     if (searchBtn && searchInput) {
         const handleSearch = () => {
             const query = searchInput.value.trim();
             if (!query) return Swal.fire('Please enter something to search!');
 
-            //виклик завантаження з параметрами фільтрації
+            //РІРёРєР»РёРє Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ Р· РїР°СЂР°РјРµС‚СЂР°РјРё С„С–Р»СЊС‚СЂР°С†С–С—
             loadPolls(`/search?q=${encodeURIComponent(query)}`);
         };
 
@@ -189,13 +189,13 @@ function initVoteSystem() {
         });
     }
 
-    //Початкове завантаження
-    //Визначення початкового стану сторінки на основі контексту
+    //РџРѕС‡Р°С‚РєРѕРІРµ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ
+    //Р’РёР·РЅР°С‡РµРЅРЅСЏ РїРѕС‡Р°С‚РєРѕРІРѕРіРѕ СЃС‚Р°РЅСѓ СЃС‚РѕСЂС–РЅРєРё РЅР° РѕСЃРЅРѕРІС– РєРѕРЅС‚РµРєСЃС‚Сѓ
     if (window.pageContext && window.pageContext.isMyPolls && window.pageContext.userId) {
         loadPolls(`/polls/user/${window.pageContext.userId}`);
     } else {
         loadPolls('/polls');
     }
 }
-//запуск системи голосування відразу після завантаження сторінки
+//Р·Р°РїСѓСЃРє СЃРёСЃС‚РµРјРё РіРѕР»РѕСЃСѓРІР°РЅРЅСЏ РІС–РґСЂР°Р·Сѓ РїС–СЃР»СЏ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ СЃС‚РѕСЂС–РЅРєРё
 document.addEventListener('DOMContentLoaded', initVoteSystem);

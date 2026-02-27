@@ -1,6 +1,6 @@
-'use strict';
+ï»¿'use strict';
 
-//çàâàíòàæåííÿ çì³ííèõ ç ôàéëó .env
+//Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ Ð·Ð¼Ñ–Ð½Ð½Ð¸Ñ… Ð· Ñ„Ð°Ð¹Ð»Ñƒ .env
 require('dotenv').config();
 
 const express = require('express');
@@ -13,10 +13,10 @@ const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const app = express();
 
-//ï³äêëþ÷åííÿ á³áë³îòåêè SweetAlert2
+//Ð¿Ñ–Ð´ÐºÐ»ÑŽÑ‡ÐµÐ½Ð½Ñ Ð±Ñ–Ð±Ð»Ñ–Ð¾Ñ‚ÐµÐºÐ¸ SweetAlert2
 app.use('/sweetalert2', express.static(__dirname + '/node_modules/sweetalert2/dist'));
 
-//Íàëàøòóâàííÿ ñõîâèùà ñåñ³é ó áàç³ äàíèõ MySQL
+//ÐÐ°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ ÑÑ…Ð¾Ð²Ð¸Ñ‰Ð° ÑÐµÑÑ–Ð¹ Ñƒ Ð±Ð°Ð·Ñ– Ð´Ð°Ð½Ð¸Ñ… MySQL
 const sessionStore = new MySQLStore({
     host: process.env.MYSQLHOST,
     user: process.env.MYSQLUSER,
@@ -25,7 +25,7 @@ const sessionStore = new MySQLStore({
     port: process.env.MYSQLPORT || 3306
 });
 
-//êîíô³ãóðàö³ÿ øàáëîí³çàòîðà (View Engine)
+//ÐºÐ¾Ð½Ñ„Ñ–Ð³ÑƒÑ€Ð°Ñ†Ñ–Ñ ÑˆÐ°Ð±Ð»Ð¾Ð½Ñ–Ð·Ð°Ñ‚Ð¾Ñ€Ð° (View Engine)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
@@ -37,33 +37,33 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-//íàëàøòóâàííÿ ïàïêè äëÿ ñòàòè÷íèõ ôàéë³â
+//Ð½Ð°Ð»Ð°ÑˆÑ‚ÑƒÐ²Ð°Ð½Ð½Ñ Ð¿Ð°Ð¿ÐºÐ¸ Ð´Ð»Ñ ÑÑ‚Ð°Ñ‚Ð¸Ñ‡Ð½Ð¸Ñ… Ñ„Ð°Ð¹Ð»Ñ–Ð²
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-//ìåõàí³çì ñåñ³é êîðèñòóâà÷³â
+//Ð¼ÐµÑ…Ð°Ð½Ñ–Ð·Ð¼ ÑÐµÑÑ–Ð¹ ÐºÐ¾Ñ€Ð¸ÑÑ‚ÑƒÐ²Ð°Ñ‡Ñ–Ð²
 app.use(session({
     key: process.env.SESSION_KEY,
     secret: process.env.SESSION_SECRET,
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 7äí
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 7Ð´Ð½
 }));
 
 
-//Ìàðøðóòè
-const indexRouter = require('./routes/index');  //ãîëîâíà ñòîð³íêà
-const authRouter = require('./routes/auth');    //àâòîðèçàö³ÿ òà ïðîô³ëü
-const apiRouter = require('./routes/polls');    //API îïèòóâàíü
-const pagesRouter = require('./routes/pages');  //yí³âåðñàëüíèé îáðîáíèê
+//ÐœÐ°Ñ€ÑˆÑ€ÑƒÑ‚Ð¸
+const indexRouter = require('./routes/index');  //Ð³Ð¾Ð»Ð¾Ð²Ð½Ð° ÑÑ‚Ð¾Ñ€Ñ–Ð½ÐºÐ°
+const authRouter = require('./routes/auth');    //Ð°Ð²Ñ‚Ð¾Ñ€Ð¸Ð·Ð°Ñ†Ñ–Ñ Ñ‚Ð° Ð¿Ñ€Ð¾Ñ„Ñ–Ð»ÑŒ
+const apiRouter = require('./routes/polls');    //API Ð¾Ð¿Ð¸Ñ‚ÑƒÐ²Ð°Ð½ÑŒ
+const pagesRouter = require('./routes/pages');  //yÐ½Ñ–Ð²ÐµÑ€ÑÐ°Ð»ÑŒÐ½Ð¸Ð¹ Ð¾Ð±Ñ€Ð¾Ð±Ð½Ð¸Ðº
 app.use('/', indexRouter);
 app.use('/', authRouter);
 app.use('/', apiRouter);
 app.use('/', pagesRouter);
 
 
-//error 404 - ñòîð³íêó íå çíàéäåíî
+//error 404 - ÑÑ‚Ð¾Ñ€Ñ–Ð½ÐºÑƒ Ð½Ðµ Ð·Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾
 app.use((req, res) => {
     res.status(404).render('error', {
         message: 'Page Not Found',
@@ -72,7 +72,7 @@ app.use((req, res) => {
     });
 });
 
-//Çàïóñê HTTP ñåðâåðà
+//Ð—Ð°Ð¿ÑƒÑÐº HTTP ÑÐµÑ€Ð²ÐµÑ€Ð°
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);

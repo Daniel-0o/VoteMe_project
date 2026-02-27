@@ -1,24 +1,24 @@
-//Керування dark mode
-//отримання збережених налаштувань теми
+п»ї//РљРµСЂСѓРІР°РЅРЅСЏ dark mode
+//РѕС‚СЂРёРјР°РЅРЅСЏ Р·Р±РµСЂРµР¶РµРЅРёС… РЅР°Р»Р°С€С‚СѓРІР°РЅСЊ С‚РµРјРё
 let darkmode = localStorage.getItem('darkmode')
 const themeSwitch = document.getElementById('theme-switcher')
 
-//функція активації темного режиму та збереження в localStorage
+//С„СѓРЅРєС†С–СЏ Р°РєС‚РёРІР°С†С–С— С‚РµРјРЅРѕРіРѕ СЂРµР¶РёРјСѓ С‚Р° Р·Р±РµСЂРµР¶РµРЅРЅСЏ РІ localStorage
 const enableDarkmode = () => {
     document.body.classList.add('darkmode')
     localStorage.setItem('darkmode', 'active')
 }
 
-//функція для вимкнення темного режиму
+//С„СѓРЅРєС†С–СЏ РґР»СЏ РІРёРјРєРЅРµРЅРЅСЏ С‚РµРјРЅРѕРіРѕ СЂРµР¶РёРјСѓ
 const disableDarkmode = () => {
     document.body.classList.remove('darkmode')
     localStorage.setItem('darkmode', null)
 }
 
-//перевірка теми при завантаженні сторінки (для збереження вибору)
+//РїРµСЂРµРІС–СЂРєР° С‚РµРјРё РїСЂРё Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅС– СЃС‚РѕСЂС–РЅРєРё (РґР»СЏ Р·Р±РµСЂРµР¶РµРЅРЅСЏ РІРёР±РѕСЂСѓ)
 if (darkmode === "active") enableDarkmode()
 
-//обробник події кліку
+//РѕР±СЂРѕР±РЅРёРє РїРѕРґС–С— РєР»С–РєСѓ
 themeSwitch.addEventListener("click", () => {
     darkmode = localStorage.getItem('darkmode')
     darkmode !== "active" ? enableDarkmode() : disableDarkmode()
@@ -26,12 +26,12 @@ themeSwitch.addEventListener("click", () => {
 
 
 
-//Ініціалізація кнопок Login та SignUp
+//Р†РЅС–С†С–Р°Р»С–Р·Р°С†С–СЏ РєРЅРѕРїРѕРє Login С‚Р° SignUp
 function initAuthButtons() {
     const loginBtn = document.getElementById('login_button');
     const signupBtn = document.getElementById('signup_button');
 
-    //інтеграція з системою динамічного завантаження сторінок
+    //С–РЅС‚РµРіСЂР°С†С–СЏ Р· СЃРёСЃС‚РµРјРѕСЋ РґРёРЅР°РјС–С‡РЅРѕРіРѕ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ СЃС‚РѕСЂС–РЅРѕРє
     if (loginBtn) {
         loginBtn.setAttribute('data-nav', '/Auth/log-in');
     }
@@ -40,26 +40,26 @@ function initAuthButtons() {
     }
 }
 
-//Логіка обробки форми реєстрації
+//Р›РѕРіС–РєР° РѕР±СЂРѕР±РєРё С„РѕСЂРјРё СЂРµС”СЃС‚СЂР°С†С–С—
 function initSignupLogic() {
     const form = document.getElementById('signUpForm');
     if (!form) return;
 
     form.addEventListener('submit', async (e) => {
-        e.preventDefault(); //скасування стандартного перезавантаження сторінки при відправці
+        e.preventDefault(); //СЃРєР°СЃСѓРІР°РЅРЅСЏ СЃС‚Р°РЅРґР°СЂС‚РЅРѕРіРѕ РїРµСЂРµР·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ СЃС‚РѕСЂС–РЅРєРё РїСЂРё РІС–РґРїСЂР°РІС†С–
 
         const errorDiv = document.getElementById('signup-error');
         const submitBtn = form.querySelector('button');
 
-        //скидання стану форми
+        //СЃРєРёРґР°РЅРЅСЏ СЃС‚Р°РЅСѓ С„РѕСЂРјРё
         submitBtn.disabled = true;
         errorDiv.style.display = 'none';
 
-        //збір даних з полів форми в об'єкт JSON
+        //Р·Р±С–СЂ РґР°РЅРёС… Р· РїРѕР»С–РІ С„РѕСЂРјРё РІ РѕР±'С”РєС‚ JSON
         const formData = Object.fromEntries(new FormData(form));
 
         try {
-            //асинхронна відправка даних на сервер (Fetch API)
+            //Р°СЃРёРЅС…СЂРѕРЅРЅР° РІС–РґРїСЂР°РІРєР° РґР°РЅРёС… РЅР° СЃРµСЂРІРµСЂ (Fetch API)
             const res = await fetch('/Auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -69,21 +69,21 @@ function initSignupLogic() {
             const data = await res.json();
 
             if (res.ok) {
-                //Успіх - переадресація в профіль
+                //РЈСЃРїС–С… - РїРµСЂРµР°РґСЂРµСЃР°С†С–СЏ РІ РїСЂРѕС„С–Р»СЊ
                 window.location.href = data.redirect;
             } else {
-                //обробка помилок валідації та візуальна індикація
+                //РѕР±СЂРѕР±РєР° РїРѕРјРёР»РѕРє РІР°Р»С–РґР°С†С–С— С‚Р° РІС–Р·СѓР°Р»СЊРЅР° С–РЅРґРёРєР°С†С–СЏ
                 errorDiv.textContent = data.error;
                 errorDiv.style.display = 'block';
                 submitBtn.disabled = false;
 
-                //анімація помилки
+                //Р°РЅС–РјР°С†С–СЏ РїРѕРјРёР»РєРё
                 form.classList.add('shake');
                 setTimeout(() => form.classList.remove('shake'), 500);
             }
         } catch (err) {
             console.error(err);
-            errorDiv.textContent = 'Помилка з\'єднання';
+            errorDiv.textContent = 'РџРѕРјРёР»РєР° Р·\'С”РґРЅР°РЅРЅСЏ';
             errorDiv.style.display = 'block';
             submitBtn.disabled = false;
         }
@@ -92,27 +92,27 @@ function initSignupLogic() {
 
 
 
-//Логіка обробки форми входу
+//Р›РѕРіС–РєР° РѕР±СЂРѕР±РєРё С„РѕСЂРјРё РІС…РѕРґСѓ
 function initLoginLogic() {
     const form = document.getElementById('loginForm');
-    if (!form) return; //перевірка наявності форми (для запобігання помилок)
+    if (!form) return; //РїРµСЂРµРІС–СЂРєР° РЅР°СЏРІРЅРѕСЃС‚С– С„РѕСЂРјРё (РґР»СЏ Р·Р°РїРѕР±С–РіР°РЅРЅСЏ РїРѕРјРёР»РѕРє)
 
     form.addEventListener('submit', async (e) => {
-        e.preventDefault(); //скасування стандартного перезавантаження сторнки
+        e.preventDefault(); //СЃРєР°СЃСѓРІР°РЅРЅСЏ СЃС‚Р°РЅРґР°СЂС‚РЅРѕРіРѕ РїРµСЂРµР·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ СЃС‚РѕСЂРЅРєРё
 
         const errorDiv = document.getElementById('login-error');
         const submitBtn = form.querySelector('button');
 
-        // Візуальний ефект завантаження (також міні захист від повторних натискань)
+        // Р’С–Р·СѓР°Р»СЊРЅРёР№ РµС„РµРєС‚ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ (С‚Р°РєРѕР¶ РјС–РЅС– Р·Р°С…РёСЃС‚ РІС–Рґ РїРѕРІС‚РѕСЂРЅРёС… РЅР°С‚РёСЃРєР°РЅСЊ)
         submitBtn.disabled = true;
         submitBtn.textContent = 'Processing...';
         errorDiv.style.display = 'none';
 
-        //збір даних форми
+        //Р·Р±С–СЂ РґР°РЅРёС… С„РѕСЂРјРё
         const formData = Object.fromEntries(new FormData(form));
 
         try {
-            //відправка запиту на сервер для перевірки даних
+            //РІС–РґРїСЂР°РІРєР° Р·Р°РїРёС‚Сѓ РЅР° СЃРµСЂРІРµСЂ РґР»СЏ РїРµСЂРµРІС–СЂРєРё РґР°РЅРёС…
             const res = await fetch('/Auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -122,14 +122,14 @@ function initLoginLogic() {
             const data = await res.json();
 
             if (res.ok) {
-                //успіх - переходимо на профіль
+                //СѓСЃРїС–С… - РїРµСЂРµС…РѕРґРёРјРѕ РЅР° РїСЂРѕС„С–Р»СЊ
                 window.location.href = data.redirect;
             } else {
-                //помилка - вивід повідомлення
+                //РїРѕРјРёР»РєР° - РІРёРІС–Рґ РїРѕРІС–РґРѕРјР»РµРЅРЅСЏ
                 errorDiv.textContent = data.error;
                 errorDiv.style.display = 'block';
 
-                //скидання кнопки в початковий стан
+                //СЃРєРёРґР°РЅРЅСЏ РєРЅРѕРїРєРё РІ РїРѕС‡Р°С‚РєРѕРІРёР№ СЃС‚Р°РЅ
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Log in';
             }
@@ -143,13 +143,13 @@ function initLoginLogic() {
 }
 
 
-//Обробка вхідних параметрів URL після завантаження сторінки
+//РћР±СЂРѕР±РєР° РІС…С–РґРЅРёС… РїР°СЂР°РјРµС‚СЂС–РІ URL РїС–СЃР»СЏ Р·Р°РІР°РЅС‚Р°Р¶РµРЅРЅСЏ СЃС‚РѕСЂС–РЅРєРё
 document.addEventListener('DOMContentLoaded', () => {
-    //отримуємо параметри з URL
+    //РѕС‚СЂРёРјСѓС”РјРѕ РїР°СЂР°РјРµС‚СЂРё Р· URL
     const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get('status');
 
-    //якщо знайдено параметр статусу success, виводимо спливаюче повідомлення
+    //СЏРєС‰Рѕ Р·РЅР°Р№РґРµРЅРѕ РїР°СЂР°РјРµС‚СЂ СЃС‚Р°С‚СѓСЃСѓ success, РІРёРІРѕРґРёРјРѕ СЃРїР»РёРІР°СЋС‡Рµ РїРѕРІС–РґРѕРјР»РµРЅРЅСЏ
     if (status === 'success') {
         Swal.fire({
             icon: 'success',
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
             position: 'top-end'
         });
 
-        //очищення "?status=success" з адреси, щоб при оновленні сторінки повідомлення не вискакувало знову
+        //РѕС‡РёС‰РµРЅРЅСЏ "?status=success" Р· Р°РґСЂРµСЃРё, С‰РѕР± РїСЂРё РѕРЅРѕРІР»РµРЅРЅС– СЃС‚РѕСЂС–РЅРєРё РїРѕРІС–РґРѕРјР»РµРЅРЅСЏ РЅРµ РІРёСЃРєР°РєСѓРІР°Р»Рѕ Р·РЅРѕРІСѓ
         const newUrl = window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
     }

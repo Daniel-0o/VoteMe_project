@@ -1,42 +1,42 @@
-const express = require('express');
+п»їconst express = require('express');
 const bcrypt = require('bcrypt');
 const db = require('../config/database');
 const router = express.Router();
 
-//Сторінка вибору дії (логін/реєстрація)
+//РЎС‚РѕСЂС–РЅРєР° РІРёР±РѕСЂСѓ РґС–С— (Р»РѕРіС–РЅ/СЂРµС”СЃС‚СЂР°С†С–СЏ)
 router.get('/Auth/auth-page', (req, res) => {
     res.render('Auth/auth-page', { title: 'Authentication' });
 });
 
-//Сторінка логіну
+//РЎС‚РѕСЂС–РЅРєР° Р»РѕРіС–РЅСѓ
 router.get('/Auth/log-in', (req, res) => {
     res.render('Auth/log-in', { title: 'Log In', error: null });
 });
 
-//Сторінка реєстрації
+//РЎС‚РѕСЂС–РЅРєР° СЂРµС”СЃС‚СЂР°С†С–С—
 router.get('/Auth/sign-up', (req, res) => {
     res.render('Auth/sign-up', { title: 'Sign Up' });
 });
 
-//ОБРОБКА РЕЄСТРАЦІЇ
+//РћР‘Р РћР‘РљРђ Р Р•Р„РЎРўР РђР¦Р†Р‡
 router.post('/Auth/register', async (req, res) => {
     const { name, email, password } = req.body;
 
-    //валідація полів
+    //РІР°Р»С–РґР°С†С–СЏ РїРѕР»С–РІ
     if (!name || !email || !password) {
         return res.status(400).json({ error: 'Fill up all the fields plaese' });
     }
-    //валідація довжини пароля
+    //РІР°Р»С–РґР°С†С–СЏ РґРѕРІР¶РёРЅРё РїР°СЂРѕР»СЏ
     if (password.length < 6) {
         return res.status(400).json({ error: 'Password is too short' });
     }
-    //валідація email
+    //РІР°Р»С–РґР°С†С–СЏ email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         return res.status(400).json({ error: 'Enter a valid email address' });
     }
 
-    //перевірка на дублікати імені та емейл
+    //РїРµСЂРµРІС–СЂРєР° РЅР° РґСѓР±Р»С–РєР°С‚Рё С–РјРµРЅС– С‚Р° РµРјРµР№Р»
     const checkSql = 'SELECT * FROM users WHERE Name = ? OR Email = ?';
     db.query(checkSql, [name, email], async (err, results) => {
         if (err) {
@@ -54,9 +54,9 @@ router.post('/Auth/register', async (req, res) => {
             }
         }
 
-        //успіх - хешування та зберігання
+        //СѓСЃРїС–С… - С…РµС€СѓРІР°РЅРЅСЏ С‚Р° Р·Р±РµСЂС–РіР°РЅРЅСЏ
         try {
-            const hashedPassword = await bcrypt.hash(password, 10); //рівень складності хешування
+            const hashedPassword = await bcrypt.hash(password, 10); //СЂС–РІРµРЅСЊ СЃРєР»Р°РґРЅРѕСЃС‚С– С…РµС€СѓРІР°РЅРЅСЏ
 
             const insertSql = 'INSERT INTO users (Name, Email, Password) VALUES (?, ?, ?)';
             db.query(insertSql, [name, email, hashedPassword], (err, result) => {
@@ -65,7 +65,7 @@ router.post('/Auth/register', async (req, res) => {
                     return res.status(500).json({ error: 'Unknown error' });
                 }
 
-                //Створення сесії
+                //РЎС‚РІРѕСЂРµРЅРЅСЏ СЃРµСЃС–С—
                 req.session.user = {
                     id: result.insertId,
                     name: name,
@@ -73,29 +73,29 @@ router.post('/Auth/register', async (req, res) => {
                 };
 
                 req.session.save(() => {
-                    //повертаємо посилання для переходу
+                    //РїРѕРІРµСЂС‚Р°С”РјРѕ РїРѕСЃРёР»Р°РЅРЅСЏ РґР»СЏ РїРµСЂРµС…РѕРґСѓ
                     res.json({ success: true, redirect: '/Auth/profile' });
                 });
             });
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Помилка сервера' });
+            res.status(500).json({ error: 'РџРѕРјРёР»РєР° СЃРµСЂРІРµСЂР°' });
         }
     });
 });
 
 
-//ОБРОБКА ЛОГІНУ
+//РћР‘Р РћР‘РљРђ Р›РћР“Р†РќРЈ
 router.post('/Auth/login', async (req, res) => {
     const { email, password } = req.body;
 
-    //повідомлення про невдалу спробу
+    //РїРѕРІС–РґРѕРјР»РµРЅРЅСЏ РїСЂРѕ РЅРµРІРґР°Р»Сѓ СЃРїСЂРѕР±Сѓ
     const authError = 'Invalid Email or Password';
 
     db.query('SELECT * FROM users WHERE Email = ?', [email], async (err, results) => {
         if (err) return res.status(500).json({ error: 'server error' });
 
-        // користувача немає в базі
+        // РєРѕСЂРёСЃС‚СѓРІР°С‡Р° РЅРµРјР°С” РІ Р±Р°Р·С–
         if (results.length === 0) {
             return res.status(401).json({ error: authError });
         }
@@ -103,12 +103,12 @@ router.post('/Auth/login', async (req, res) => {
         const user = results[0];
         const isMatch = await bcrypt.compare(password, user.Password);
 
-        //пароль не підійшов
+        //РїР°СЂРѕР»СЊ РЅРµ РїС–РґС–Р№С€РѕРІ
         if (!isMatch) {
             return res.status(401).json({ error: authError });
         }
 
-        //Успіх
+        //РЈСЃРїС–С…
         req.session.user = {
             id: user.id,
             name: user.Name,
@@ -116,7 +116,7 @@ router.post('/Auth/login', async (req, res) => {
         };
 
         req.session.save((err) => {
-            if (err) return res.status(500).json({ error: 'Помилка сесії' });
+            if (err) return res.status(500).json({ error: 'РџРѕРјРёР»РєР° СЃРµСЃС–С—' });
             res.json({ success: true, redirect: '/Auth/profile' });
         });
     });
@@ -124,19 +124,19 @@ router.post('/Auth/login', async (req, res) => {
 
 
 
-//Обробка запиту на відображення профілю користувача (контроль доступу)
+//РћР±СЂРѕР±РєР° Р·Р°РїРёС‚Сѓ РЅР° РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ РїСЂРѕС„С–Р»СЋ РєРѕСЂРёСЃС‚СѓРІР°С‡Р° (РєРѕРЅС‚СЂРѕР»СЊ РґРѕСЃС‚СѓРїСѓ)
 router.get('/Auth/profile', (req, res) => {
     if (!req.session.user) {
-        return res.redirect('/Auth/auth-page'); //переадресація
+        return res.redirect('/Auth/auth-page'); //РїРµСЂРµР°РґСЂРµСЃР°С†С–СЏ
     }
-    res.render('Auth/profile', { //рендеринг сторінки профілю
+    res.render('Auth/profile', { //СЂРµРЅРґРµСЂРёРЅРі СЃС‚РѕСЂС–РЅРєРё РїСЂРѕС„С–Р»СЋ
         title: 'Profile',
         user: req.session.user,
     });
 });
 
 
-//Перевірка сесії
+//РџРµСЂРµРІС–СЂРєР° СЃРµСЃС–С—
 router.get('/Auth/check-session', (req, res) => {
     if (req.session.user) {
         return res.redirect('/Auth/profile');
@@ -146,7 +146,7 @@ router.get('/Auth/check-session', (req, res) => {
 });
 
 
-//Маршрут для відображення сторінки home.ejs
+//РњР°СЂС€СЂСѓС‚ РґР»СЏ РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ СЃС‚РѕСЂС–РЅРєРё home.ejs
 router.get('/Home/home', (req, res) => {
     res.render('Home/home', {
         title: 'Home',
@@ -155,22 +155,22 @@ router.get('/Home/home', (req, res) => {
 });
 
 
-//Обробка запиту на відображення сторінки додавання опитування (контроль доступу)
+//РћР±СЂРѕР±РєР° Р·Р°РїРёС‚Сѓ РЅР° РІС–РґРѕР±СЂР°Р¶РµРЅРЅСЏ СЃС‚РѕСЂС–РЅРєРё РґРѕРґР°РІР°РЅРЅСЏ РѕРїРёС‚СѓРІР°РЅРЅСЏ (РєРѕРЅС‚СЂРѕР»СЊ РґРѕСЃС‚СѓРїСѓ)
 router.get('/Home/add-new', (req, res) => {
     if (!req.session.user) {
-        return res.redirect('/Home/message-home'); //переадресація в разі відсутності
+        return res.redirect('/Home/message-home'); //РїРµСЂРµР°РґСЂРµСЃР°С†С–СЏ РІ СЂР°Р·С– РІС–РґСЃСѓС‚РЅРѕСЃС‚С–
     }
-    res.render('Home/add-new', { //перехід на бажану сторінку
+    res.render('Home/add-new', { //РїРµСЂРµС…С–Рґ РЅР° Р±Р°Р¶Р°РЅСѓ СЃС‚РѕСЂС–РЅРєСѓ
         title: 'Add Poll',
         user: req.session.user,
     });
 });
 
 
-//Вихід
+//Р’РёС…С–Рґ
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
-        if (err) return res.status(500).send('Помилка виходу');
+        if (err) return res.status(500).send('РџРѕРјРёР»РєР° РІРёС…РѕРґСѓ');
         res.redirect('/Auth/auth-page');
     });
 });

@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+п»їconst mysql = require('mysql2');
 
 const db = mysql.createPool({
     host: process.env.MYSQLHOST,
@@ -6,9 +6,9 @@ const db = mysql.createPool({
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE,
     port: process.env.MYSQLPORT || 3306,
-    waitForConnections: true, // чекати, якщо всі з'єднання зайняті
-    connectionLimit: 10,      //чаксимум 10 одночасних з'єднань
-    queueLimit: 0 //необмежена черга запитів
+    waitForConnections: true, // С‡РµРєР°С‚Рё, СЏРєС‰Рѕ РІСЃС– Р·'С”РґРЅР°РЅРЅСЏ Р·Р°Р№РЅСЏС‚С–
+    connectionLimit: 10,      //С‡Р°РєСЃРёРјСѓРј 10 РѕРґРЅРѕС‡Р°СЃРЅРёС… Р·'С”РґРЅР°РЅСЊ
+    queueLimit: 0 //РЅРµРѕР±РјРµР¶РµРЅР° С‡РµСЂРіР° Р·Р°РїРёС‚С–РІ
 });
 
-module.exports = db; //доступ для інших файлів
+module.exports = db; //РґРѕСЃС‚СѓРї РґР»СЏ С–РЅС€РёС… С„Р°Р№Р»С–РІ
