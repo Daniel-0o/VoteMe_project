@@ -1,0 +1,20 @@
+<div id="profile">
+	<h1>Account page</h1>
+	
+	<p style=" padding: 0; margin: 0">
+		Welcome, <strong> <%= user.name %> </strong>
+	</p>
+	
+	<p>
+		Your email address: <strong> <%= user.email %> </strong>
+	</p>
+
+	<a>
+		<button id="myPollsBtn" data-nav="/my-polls">My Polls</button>
+	</a>
+
+	<a href="/logout">
+		<button id="logOutBtn">Log Out</button>
+	</a>
+	
+</div>

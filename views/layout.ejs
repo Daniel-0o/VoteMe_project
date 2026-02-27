@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="icon" href="/images/logo.png" type="image/png">
+  <link rel="stylesheet" href="/stylesheets/main.css">
+  <script src="/javascripts/navigation.js" defer></script>
+  <script src="/javascripts/main.js" defer></script>
+  <script src="/javascripts/show-polls.js" defer></script>
+  <script src="/sweetalert2/sweetalert2.all.min.js" defer></script>
+</head>
+<body>
+  <%- include('partials/header') %>
+    <%- include('partials/sidebar') %>
+    <main>
+      <%- body %>
+    </main>
+  <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<script>
+	window.pageContext = {
+	isMyPolls: <%= JSON.stringify(isMyPolls || false) %>,
+	userId: <%= JSON.stringify(userId || null) %>
+	};
+</script>
+
+<div>
+<h2 style="text-align: center">My polls:</h2>
+<div id="pollsContainer"></div> 
+</div>

@@ -1,0 +1,26 @@
+<div class="add-poll-container">
+	<h2>Create a new poll</h2>
+
+	<form id="addPollForm" action="/polls/add" method="POST" enctype="multipart/form-data">
+		
+		<!--поле для питання -->
+		<label for="question">Question:</label>
+		<input type="text" id="question" name="question" required="" placeholder="Введіть текст питання" />
+
+		<!--фото-->
+		<label for="image">Picture (optional):</label>
+		<input type="file" id="image" name="image" accept="image/*" />
+
+		<!--варіанти відповідей-->
+		<div class="options-group">
+			<label>Answer options:</label>
+			<input type="text" name="options[]" placeholder="Option 1" required="" />
+			<input type="text" name="options[]" placeholder="Option 2" required="" />
+			<input type="text" name="options[]" placeholder="Option 3" />
+			<input type="text" name="options[]" placeholder="Option 4" />
+		</div>
+
+		<button type="submit" class="submit_button">Publish</button>
+		
+	</form>
+</div>
